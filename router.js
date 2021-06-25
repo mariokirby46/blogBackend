@@ -20,12 +20,23 @@ router.get('/',function(req,res){
 router.post('/form',upload.array('images'),function(req,res){
     console.log(req.body)
     console.log(req.files)
-    
-    let doc = new model({title:req.body.title,content:req.body.text,files:[req.files[0].key]})
+    let fileKeys=[]
+    for(let i = 0;i<req.files.length;i++){
+        fileKeys.push(req.files[i].key)
+    }
+    let doc = new model({title:req.body.title,content:req.body.text,files:fileKeys})
     doc.save()
     res.json({status:true,doc:doc})
 })
 
+router.get('/search',async function(req,res){
+    if (!req.query['number']){
+        console.log('wrong query')
+        return res.status(400)
+    }
+    req.query
+    model.find({number:'something'})
+})
 
 //404 not found
 router.use( function(req,res){

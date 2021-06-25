@@ -13,26 +13,21 @@ const blogSchema = new mongoose.Schema({
 
 
 blogSchema.virtual('urls').get(function(){
-    // let urls = []
-    // for (let i = 0;i<this.files.length;i++){
-    //     let url = s3.getSignedUrl('getObject',{
-    //         Bucket:process.env.aws_bucket,
-    //         Key:this.,
-    //         Expires:300
-    //     })
-    //     urls.push(url)
-    // }
-    // return urls
+    let urls = []
+    for (let i = 0;i<this.files.length;i++){
+        let url = s3.getSignedUrl('getObject',{
+            Bucket:process.env.bucket,
+            Key:this.files[i],
+            Expires:300
+        })
+        urls.push(url)
+    }
+    return urls
 })
-
-blogSchema.methods.function = function(param){
-
-}
 
 blogSchema.pre('save',function(next){
     //do things
     console.log('saved')
-    
     next()
 })
 
