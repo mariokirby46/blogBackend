@@ -18,13 +18,20 @@ router.get('/',function(req,res){
 })
 
 router.post('/form',upload.array('dragger'),function(req,res){
-    console.log(req.body)
-    console.log(req.files)
-    let fileKeys=[]
-    for(let i = 0;i<req.files.length;i++){
-        fileKeys.push(req.files[i].key)
+    let input = req.body
+    console.log(input)
+    if (req.files){
+        console.log(req.files)
+        let fileKeys=[]
+        for(let i = 0;i<req.files.length;i++){
+            fileKeys.push(req.files[i].key)
+        }
+        input.files=fileKeys
     }
-    let doc = new model({title:req.body.title,content:req.body.text,files:fileKeys})
+    
+    
+
+    let doc = new model(input)
     model.countDocuments().then(function(count){
         doc.postNumber = count +1
         console.log(`this is blog number ${doc.postNumber}`)
