@@ -25,11 +25,6 @@ blogSchema.virtual('urls').get(function(){
     return urls
 })
 
-blogSchema.pre('save',function(next){
-    //do things
-    console.log('saved')
-    next()
-})
 
 blogSchema.post('save',function(res,next){
     console.log('blog saved')
@@ -41,7 +36,7 @@ blogSchema.post('findOne',function(res,next){
     next()
 })
 
-blogSchema.post('find',function errorHandler(err,res,next){
+blogSchema.post('findOne',function errorHandler(err,res,next){
     //error handle if needed
     next()
 })

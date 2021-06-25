@@ -25,8 +25,12 @@ router.post('/form',upload.array('images'),function(req,res){
         fileKeys.push(req.files[i].key)
     }
     let doc = new model({title:req.body.title,content:req.body.text,files:fileKeys})
-    doc.save()
-    res.json({status:true,doc:doc})
+    model.countDocuments().then(function(count){
+        doc.postNumber = count +1
+        console.log(`this is blog number ${doc.postNumber}`)
+        doc.save()
+        res.json({status:true,doc:doc})
+    })
 })
 
 router.get('/search',async function(req,res){
@@ -34,8 +38,9 @@ router.get('/search',async function(req,res){
         console.log('wrong query')
         return res.status(400)
     }
-    req.query
-    model.find({number:'something'})
+    console.log(`query is ${req.query.number}`)
+    let doc = await model.findOne({number:req.query.number})
+    res.json(doc)
 })
 
 //404 not found
