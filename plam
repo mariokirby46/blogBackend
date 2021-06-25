@@ -1,0 +1,21 @@
+take the blog input, and save it
+take the saved blog input and return it:
+
+VER 1
+
+POST - /upload
+{
+    content:Object,
+    dragger:array of image objects
+}
+
+
+GET - /search/?number=1
+{
+    content:Object,
+    urls:[ ]
+}
+
+
+ver 2
+listing things
