@@ -17,7 +17,7 @@ router.get('/',function(req,res){
     res.json({hello:'world'})
 })
 
-router.post('/form',upload.array('images'),function(req,res){
+router.post('/form',upload.array('dragger'),function(req,res){
     console.log(req.body)
     console.log(req.files)
     let fileKeys=[]
