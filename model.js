@@ -3,6 +3,11 @@ const mongoose = require('mongoose')
 const s3 = require('./s3')
 
 const blogSchema = new mongoose.Schema({
+    title:String,
+    point:String,
+    author:String,
+    postition:String,
+    date:String,
     postNumber:Number,
     content:{type:Array,required:true},
     files:[String]
