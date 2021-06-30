@@ -18,4 +18,10 @@ GET - /search/?number=1
 
 
 ver 2
+
+DELETE - /search/?number=1
+
+
 listing things
+
+/delete route

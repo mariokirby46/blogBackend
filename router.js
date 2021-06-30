@@ -46,8 +46,28 @@ router.get('/search',async function(req,res){
         return res.status(400)
     }
     console.log(`query is ${req.query.number}`)
-    let doc = await model.findOne({number:req.query.number})
-    res.json(doc)
+    let doc = await model.findOne({postNumber:req.query.number})
+    console.log(doc)
+    if(doc){
+        res.json(doc)
+    }else{
+        res.json({status:false,message:'there is no doc'})
+    }
+})
+
+router.delete('/search',async function(req,res){
+    if (!req.query['number']){
+        console.log('wrong query')
+        return res.status(400)
+    }
+    console.log(`query is ${req.query.number}`)
+    let doc = await model.findOne({postNumber:req.query.number})
+    if(doc){
+        doc.remove()
+        res.json({status:true})
+    }else{
+        res.json({status:false,message:'there is no doc'})
+    }
 })
 
 //404 not found

@@ -37,15 +37,42 @@ blogSchema.post('save',function(res,next){
 })
 
 blogSchema.post('findOne',function(res,next){
-    console.log('blog found')
+    if(res){
+        console.log('blog found')
+    } else if(!res){
+        console.log('there is no blog')
+    }
     next()
 })
 
-blogSchema.post('findOne',function errorHandler(err,res,next){
-    //error handle if needed
-    next()
+blogSchema.post('remove',function(res,next){
+    console.log('blog deleted')
+    if(res.files){
+        var params = {
+            Bucket: process.env.bucket, 
+            Delete: { 
+                Objects: []
+            }
+        }
+        res.files.forEach(function(val){
+            params.Delete.Objects.push({Key:val})
+        })
+      
+        s3.deleteObjects(params, function(err, data) {
+            if (err) {
+                console.log('there was an error removing image from s3')
+                console.log(err, err.stack);
+                next()
+            } 
+            else{
+                console.log('deleted from s3 successfully')
+                next()
+            }
+        });
+    }else{
+        next()
+    }
 })
-
 
 
 module.exports = new mongoose.model('Blogs',blogSchema)
