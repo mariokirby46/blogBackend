@@ -6,7 +6,7 @@ const blogSchema = new mongoose.Schema({
     title:String,
     point:String,
     author:String,
-    postition:String,
+    position:String,
     date:String,
     postNumber:Number,
     content:{type:Array,required:true},
