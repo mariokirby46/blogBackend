@@ -18,9 +18,11 @@ router.get('/',function(req,res){
 })
 
 router.post('/form',upload.array('dragger'),function(req,res){
+    console.log(req.headers)
     let input = req.body
     console.log(input)
     if (req.files){
+        //ensure that this is the actual post multer files
         console.log(req.files)
         let fileKeys=[]
         for(let i = 0;i<req.files.length;i++){
@@ -28,7 +30,6 @@ router.post('/form',upload.array('dragger'),function(req,res){
         }
         input.files=fileKeys
     }
-    
     
 
     let doc = new model(input)
