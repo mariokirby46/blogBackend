@@ -1,7 +1,9 @@
 const express = require('express')
 
+
 const upload = require('./multer')
 const model = require('./model')
+const blogCounter= require('./blogCounter')
 
 const  router = express.Router()
 
@@ -13,16 +15,16 @@ router.use(function(req,res,next){
 })
 
 
-router.get('/',function(req,res){
+router.get('/',async function(req,res){
     res.json({hello:'world'})
 })
 
-router.post('/form',upload.array('dragger'),function(req,res){
-    console.log(req.headers)
+router.post('/form',upload.array('dragger'),async function(req,res){
     let input = req.body
     console.log(input)
-    if (req.files){
-        //ensure that this is the actual post multer files
+
+    //check if there is something uploaded
+    if (req.files.length>0){
         console.log(req.files)
         let fileKeys=[]
         for(let i = 0;i<req.files.length;i++){
@@ -31,14 +33,14 @@ router.post('/form',upload.array('dragger'),function(req,res){
         input.files=fileKeys
     }
     
+    blogCounter.increment()
+    number = await blogCounter.getNumber() 
+    input.postNumber=number
 
+    console.log(input)
     let doc = new model(input)
-    model.countDocuments().then(function(count){
-        doc.postNumber = count +1
-        console.log(`this is blog number ${doc.postNumber}`)
-        doc.save()
-        res.json({status:true,doc:doc})
-    })
+    doc.save()
+    res.json({status:true,doc:doc})
 })
 
 router.get('/search',async function(req,res){
@@ -69,6 +71,47 @@ router.delete('/search',async function(req,res){
     }else{
         res.json({status:false,message:'there is no doc'})
     }
+})
+
+router.post('/search',upload.array('dragger'),async function(req,res){
+    if (!req.query['number']){
+        console.log('wrong query')
+        return res.status(400)
+    }
+    console.log(`query is ${req.query.number}`)
+    let doc = await model.findOne({postNumber:req.query.number})
+    let input = req.body
+    console.log(input)
+    doc.clearImages()
+
+    console.log(`files: ${req.files}`)
+    let fileKeys=[]
+    for(let i = 0;i<req.files.length;i++){
+        fileKeys.push(req.files[i].key)
+    }
+    input.files=fileKeys
+    
+    for (i in input){
+        doc[i]=input[i]
+    }
+    doc.save()
+    res.json({status:true,doc:doc})
+})
+
+router.get('/search/all', async function(req,res){
+    let docs = await model.find({})
+    if (docs.length==0){
+        return res.json({status:true,blogs:null})
+    }
+    res.json({status:true,blogs:docs})
+})
+
+router.delete('/all', async function(req,res){
+    let docs = await model.find({})
+    for(let i=0;i<docs.length;i++){
+        docs[i].remove()
+    }
+    res.json({status:true,blogs:docs})
 })
 
 //404 not found

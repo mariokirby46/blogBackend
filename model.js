@@ -15,7 +15,34 @@ const blogSchema = new mongoose.Schema({
     toJSON:{virtuals:true}
 })
 
-
+blogSchema.methods.clearImages=async function(){
+    if(this.files){
+        var params = {
+            Bucket: process.env.bucket, 
+            Delete: { 
+                Objects: []
+            }
+        }
+        for(let i =0;i<this.files.length;i++){
+            params.Delete.Objects.push({Key:this.files[i]})
+        }
+      
+        s3.deleteObjects(params, function(err, data) {
+            if (err) {
+                console.log('there was an error removing image from s3')
+                console.log(err, err.stack);
+                // throw err
+            } 
+            else{
+                console.log('deleted from s3 successfully')
+                return
+            }
+        });
+    }else{
+        console.log('no files')
+        return
+    }
+}
 
 blogSchema.virtual('urls').get(function(){
     let urls = []
@@ -48,27 +75,8 @@ blogSchema.post('findOne',function(res,next){
 blogSchema.post('remove',function(res,next){
     console.log('blog deleted')
     if(res.files){
-        var params = {
-            Bucket: process.env.bucket, 
-            Delete: { 
-                Objects: []
-            }
-        }
-        res.files.forEach(function(val){
-            params.Delete.Objects.push({Key:val})
-        })
-      
-        s3.deleteObjects(params, function(err, data) {
-            if (err) {
-                console.log('there was an error removing image from s3')
-                console.log(err, err.stack);
-                next()
-            } 
-            else{
-                console.log('deleted from s3 successfully')
-                next()
-            }
-        });
+        res.clearImages()
+        next()
     }else{
         next()
     }

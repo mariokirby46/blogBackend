@@ -5,6 +5,7 @@ const cors = require('cors')
 
 const router = require('./router')
 
+require('./blogCounter').init()
 
 const app = express()
 

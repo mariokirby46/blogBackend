@@ -21,7 +21,10 @@ ver 2
 
 DELETE - /search/?number=1
 
+POST - /search/?number=1
+{
+    content:Array,
+    dragger:array of image objects
+}
 
-listing things
-
-/delete route
+GET - /search/all
