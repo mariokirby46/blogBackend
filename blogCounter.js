@@ -14,9 +14,9 @@ function init(){
 
 async function getNumber(){
     let number
-    await blogCounter.findOne({},function(err,res){
-        number= res.number
-    })
+    let res = await blogCounter.findOne({})
+    number = res.number
+    console.log(`blogCounter number: ${number}`)
     return number
 }
 

@@ -35,7 +35,7 @@ router.post('/form',upload.array('dragger'),async function(req,res){
         }
         
         blogCounter.increment()
-        number = await blogCounter.getNumber() 
+        number = await blogCounter.getNumber()
         input.postNumber=number
 
         console.log(input)
