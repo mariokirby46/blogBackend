@@ -2,7 +2,7 @@ const express = require('express')
 
 const upload = require('./multer')
 const model = require('./model')
-const blogCounter= require('./blogCounter')
+const getNumberAndIncrement= require('./blogCounter').getNumberAndIncrement
 const errorHandler = require('./errorHandler')
 
 const  router = express.Router()
@@ -34,8 +34,7 @@ router.post('/form',upload.array('dragger'),async function(req,res){
             input.files=fileKeys
         }
         
-        blogCounter.increment()
-        number = await blogCounter.getNumber()
+        number = await getNumberAndIncrement()
         input.postNumber=number
 
         console.log(input)

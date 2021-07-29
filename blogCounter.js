@@ -27,6 +27,17 @@ function increment(){
     })
 }
 
+async function getNumberAndIncrement(){
+    let number
+    let res = await blogCounter.findOne({})
+    number = res.number
+    res.number++
+    await res.save()
+    console.log(`blogCounter number: ${number}`)
+    return number
+}
+
 module.exports.init=init
 module.exports.getNumber=getNumber
 module.exports.increment=increment
+module.exports.getNumberAndIncrement=getNumberAndIncrement
